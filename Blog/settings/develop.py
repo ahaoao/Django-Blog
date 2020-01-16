@@ -12,7 +12,7 @@ DEBUG = True
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'stu_app',
+        'NAME': 'Blogs',
         'USER': 'root',
         'PASSWORD': '000000',
         'HOST': '127.0.0.1',

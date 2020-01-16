@@ -31,6 +31,8 @@
   <component name="ProjectId" id="1WSyUS8SIA0roFZH7gABh2XlJic" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="restartRequiresConfirmation" value="false" />
     <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
@@ -87,7 +89,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1579157306910</updated>
-      <workItem from="1579157313101" duration="639000" />
+      <workItem from="1579157313101" duration="2572000" />
     </task>
     <servers />
   </component>
