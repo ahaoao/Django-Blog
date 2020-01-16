@@ -34,7 +34,10 @@
   <component name="ProjectId" id="1WSyUS8SIA0roFZH7gABh2XlJic" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
+<<<<<<< HEAD
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+=======
+>>>>>>> 4aed5cf13fa6f21c74846fef83797157326c0918
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="restartRequiresConfirmation" value="false" />
