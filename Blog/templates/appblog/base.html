@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title  %}首页{% endblock %} - Django 博客系统</title>
+</head>
+<body>
+<div>
+    顶部分类：
+    {% for cate  in navs %}
+        <a href="{% url 'category-list' cate.id %}">{{ cate.name }}</a>
+    {% endfor %}
+</div>
+<hr>
+
+{% block main %}
+
+{% endblock %}
+
+<hr>
+<div>底部分类：
+    {% for cate in categories %}
+    <a href="{% url 'category-list' cate.id %}">{{ cate.name }}</a>
+    {% endfor %}
+</div>
+<hr>
+<div>侧边栏显示：
+    {% for sidebar in sidebars %}
+        <h4>{{ sidebar.title }}</h4>
+        {{ sidebar.content_html|safe }}
+    {% endfor %}
+</div>
+</body>
+</html>

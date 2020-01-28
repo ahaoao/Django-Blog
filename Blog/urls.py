@@ -15,7 +15,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from .custom_site import custom_site
+from appBlog.views import ArticleDetailView, ArticleListView, LinksView
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('', ArticleListView.as_view(), name="index"),
+    path('category/<int:category_id>', ArticleListView.as_view(), name="category-list"),
+    path('tag/<int:tag_id>', ArticleListView.as_view(), name="tag-list"),
+    path('article/<int:article_id>.html', ArticleDetailView.as_view(), name="article-detail"),
+    path('links/', LinksView.as_view(), name="links-list"),
+    path('super_admin/', admin.site.urls, name="super-admin"),
+    path('admin/', custom_site.urls, name="admin"),
 ]

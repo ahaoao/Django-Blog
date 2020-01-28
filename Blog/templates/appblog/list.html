@@ -1,0 +1,24 @@
+{% extends 'appblog/base.html' %}
+
+{% block title %}
+    {% if tag %}
+        标签页:{{ tag.name }}
+    {% elif category %}
+        分类页:{{ category.name }}
+    {% endif %}
+{% endblock %}
+
+
+{% block main %}
+    <ul>
+        {% for article in article_list %}
+            <li><a href="{% url 'article-detail' article.id %}">{{ article.title }}</a>
+            <div>
+                <span>作者：{{ article.owner.username }}</span>
+                <span>分类：{{ article.category.name }}</span>
+            </div>
+            <p>摘要：{{ article.desc }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

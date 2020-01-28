@@ -19,6 +19,32 @@ class Category(models.Model):
     owner = models.ForeignKey(User, verbose_name="作者", on_delete=models.CASCADE)
     created_time = models.DateTimeField(auto_now_add=True, verbose_name="创建时间")
 
+    def __str__(self):
+        """设置返回字符串"""
+        return self.name
+
+    @classmethod
+    def get_all(cls):
+        return cls.objects.all()
+
+    @classmethod
+    def get_navs(cls):
+        """获取导航信息"""
+        categories = cls.objects.filter(status=cls.STATUS_NORMAL)
+        nav_categories = []
+        normal_categories = []
+        # 实现一次查询，解决N+1问题
+        for cate in categories:
+            if cate.is_nav:
+                nav_categories.append(cate)
+            else:
+                normal_categories.append(cate)
+
+        return {
+            'navs': nav_categories,
+            'categories': normal_categories,
+        }
+
     class Meta:
         verbose_name_plural = "分类"
 
@@ -35,6 +61,14 @@ class Tag(models.Model):
     status = models.PositiveIntegerField(choices=STATUS_ITEMS, default=STATUS_NORMAL, verbose_name="状态")
     owner = models.ForeignKey(User, verbose_name="作者", on_delete=models.CASCADE)
     created_time = models.DateTimeField(auto_now_add=True, verbose_name="创建时间")
+
+    def __str__(self):
+        return self.name
+
+    @classmethod
+    def get_all(cls):
+        # 优化查询方式，一次性查询出所有数据。解决N+1问题
+        return cls.objects.all()
 
     class Meta:
         verbose_name_plural = "标签"
@@ -57,8 +91,57 @@ class Article(models.Model):
     category = models.ForeignKey(Category, verbose_name="分类", on_delete=models.CASCADE)
     tag = models.ManyToManyField(Tag, verbose_name="标签")
     owner = models.ForeignKey(User, verbose_name="作者", on_delete=models.CASCADE)
+    # 用pv和uv统计文章的访问量
+    pv = models.PositiveIntegerField(default=1)
+    uv = models.PositiveIntegerField(default=1)
     created_time = models.DateTimeField(auto_now_add=True, verbose_name="创建时间")
+
+    def __str__(self):
+        return self.title
+
+    @classmethod
+    def hot_article(cls):
+        """获取最热文章"""
+        return cls.objects.filter(status=cls.STATUS_NORMAL).order_by('-pv').only('title', 'id')
+
+    @classmethod
+    # 显示所有文章
+    def get_all(cls):
+        return cls.objects.all()
+
+    @classmethod
+    # 获取最新文章
+    def latest_articles(cls):
+        return cls.objects.filter(status=cls.STATUS_NORMAL).order_by('-id')
+
+    @staticmethod
+    def get_by_tag(tag_id):
+        """从view中拆分出来处理tag_id的函数"""
+        try:
+            tag = Tag.get_all().get(id=tag_id)
+        except Tag.DoesNotExist:
+            tag = None
+            article_list = []
+        else:
+            # 通过tag查询状态正常的文章
+            article_list = tag.article_set.filter(status=Article.STATUS_NORMAL).select_related('owner', 'category')
+
+        return article_list, tag
+
+    @staticmethod
+    def get_by_category(category_id):
+        """从view中拆分出来处理category_id的函数"""
+        try:
+            category = Category.get_all().get(id=category_id)
+        except Category.DoesNotExist:
+            category = None
+            article_list = []
+        else:
+            article_list = category.article_set.filter(status=Article.STATUS_NORMAL).select_related('owner', 'category')
+
+        return article_list, category
 
     class Meta:
         verbose_name_plural = "文章"
+        # 通过id进行降序排列
         ordering = ['-id']
