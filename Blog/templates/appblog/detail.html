@@ -1,0 +1,16 @@
+{% extends 'appblog/base.html' %}
+{% block title %}
+    {{ article.title }}
+{% endblock %}
+
+{% block main %}
+    {% if article %}
+        <h1>{{ article.title }}</h1>
+    <div>
+        <span>分类：{{ article.category.name }}</span>
+        <span>作者：{{ article.owner.username }}</span>
+    </div>
+        <hr>
+        <p>{{ article.content }}</p>
+    {% endif %}
+{% endblock %}
