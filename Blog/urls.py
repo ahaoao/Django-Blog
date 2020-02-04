@@ -16,14 +16,20 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from .custom_site import custom_site
-from appBlog.views import ArticleDetailView, ArticleListView, LinksView
+from appBlog.views import IndexView, CategoryView, TagView, ArticleDetailView, SearchView, AuthorView
+from appConfig.views import LinkListView
+from appComment.views import CommentView
+
 
 urlpatterns = [
-    path('', ArticleListView.as_view(), name="index"),
-    path('category/<int:category_id>', ArticleListView.as_view(), name="category-list"),
-    path('tag/<int:tag_id>', ArticleListView.as_view(), name="tag-list"),
+    path('', IndexView.as_view(), name="index"),
+    path('category/<int:category_id>', CategoryView.as_view(), name="category-list"),
+    path('tag/<int:tag_id>', TagView.as_view(), name="tag-list"),
     path('article/<int:article_id>.html', ArticleDetailView.as_view(), name="article-detail"),
-    path('links/', LinksView.as_view(), name="links-list"),
-    path('super_admin/', admin.site.urls, name="super-admin"),
-    path('admin/', custom_site.urls, name="admin"),
+    path('search', SearchView.as_view(), name="search"),
+    path('author/<int:owner_id>', AuthorView.as_view(), name="author-list"),
+    path('link', LinkListView.as_view(), name="links-list"),
+    path('comment', CommentView.as_view(), name='comment'),
+    path('super_admin', admin.site.urls, name="super-admin"),
+    path('admin', custom_site.urls, name="admin"),
 ]

@@ -26,6 +26,12 @@ class Link(models.Model):
     def __str__(self):
         return self.title
 
+    @classmethod
+    def get_normal(cls):
+        """获取正常友链表"""
+        queryset = cls.objects.filter(status=cls.STATUS_NORMAL)
+        return queryset
+
     class Meta:
         verbose_name_plural = "友链"
 
@@ -76,21 +82,22 @@ class SideBar(models.Model):
         from appComment.models import Comment
 
         result = ''
-        if self.display_type == self.DISPLAY_HTML:
+
+        if self.display_type == self.DISPLAY_HTML:  # HTML
             result = self.content
-        elif self.display_type == self.DISPLAY_LATEST:
+        elif self.display_type == self.DISPLAY_LATEST:  # 最新文章
             context = {
                 'articles': Article.latest_articles()
             }
             result = render_to_string('appconfig/blocks/sidebar_articles.html', context)
-        elif self.display_type == self.DISPLAY_HOT:
+        elif self.display_type == self.DISPLAY_HOT:  # 最热文章
             context = {
                 'articles': Article.hot_article()
             }
             result = render_to_string('appconfig/blocks/sidebar_articles.html', context)
-        elif self.display_type == self.DISPLAY_COMMENT:
+        elif self.display_type == self.DISPLAY_COMMENT:  # 最近评论
             context = {
-                'comments': Comment.objects.filter(status=Comment.STATUS_NORMAL)
+                'comments': Comment.objects.filter(status=Comment.STATUS_NORMAL).order_by('-id')[:5]  # 降序排列取前五条数据
             }
             result = render_to_string('appconfig/blocks/sidebar_comments.html', context)
         return result

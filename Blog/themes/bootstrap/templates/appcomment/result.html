@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>评论结果页</title>
+    <style>
+        body{
+            TEXT-ALIGN: center;
+        }
+        .result {
+            text-align: center;
+            width: 40%;
+            margin: auto;
+        }
+        .errorlist {
+            color: red;
+        }
+        ul li{
+            list-style-type: None;
+        }
+    </style>
+</head>
+<body>
+<div class="result">
+    {% if succeed %}
+        评论成功！等待管理员审核。
+        <br>
+        还有<span id="sp">5</span>秒跳转到文章页面...
+    {% else %}
+        <ul class="errorlist">
+            {% for field, message in form.errors.items %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        <br>
+        还有<span id="sp">5</span>秒跳转到文章页面...
+    {% endif %}
+</div>
+<script>
+    onload=function () {
+        setInterval(go,1000)
+    };
+    var x=4;
+    function go() {
+
+        if (x>=0){
+            document.getElementById("sp").innerText=x;
+        }else {
+            location.href="{{ target }}";
+        }
+        x--;
+    }
+</script>
+</body>
+</html>
