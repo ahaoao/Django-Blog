@@ -55,11 +55,10 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'Blog.urls'
 
-TEMPLATES = [
+TEMPLATES = [  # 指定模板
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, './templates')]
-        ,
+        'DIRS': [os.path.join(BASE_DIR, 'themes', 'bootstrap', 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -122,4 +121,16 @@ USE_TZ = False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
+# 配置部署之后的静态资源路径，与collectionstatic和Nginx有关
+STATIC_ROOT = 'tmp/static'
+
+# 配置页面上静态资源的起始路径，与模板中的{% load static %}有关
 STATIC_URL = '/static/'
+
+THEME = 'bootstrap'
+
+# 指定静态资源所在目录
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'themes', THEME, 'static'),
+]
+

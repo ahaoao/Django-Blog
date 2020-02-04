@@ -1,0 +1,49 @@
+{% extends 'appblog/base.html' %}
+
+{% block title %}
+    {% if tag %}
+        标签页:{{ tag.name }}
+    {% elif category %}
+        分类页:{{ category.name }}
+    {% else %}
+        首页
+    {% endif %}
+{% endblock %}
+
+{% block main %}
+    {% if article_list %}
+    {% for article in article_list %}
+        <div class="card post">
+            <div class="card-body">
+                <h5 class="card-title"><a href="{% url 'article-detail' article.id %}">{{ article.title }}</a></h5>
+                <span class="card-link">作者:<a href="{% url 'author-list' article.owner_id %}">{{ article.owner }}</a></span>
+                <span class="card-link">分类:<a
+                        href="{% url 'category-list' article.category.id %}">{{ article.category }}</a></span>
+                <span class="card-link">标签:
+                    {% for tag in article.tag.all %}
+                        <a href="{% url 'tag-list' tag.id %}">{{ tag.name }}</a>
+                    {% endfor %}
+                </span>
+                <p class="card-text">
+                    {{ article.desc }}
+                    <a href="{% url 'article-detail' article.id %}">完整内容</a>
+                </p>
+            </div>
+        </div>
+    {% endfor %}
+        {% else %}
+        <h4>未查到与<span style="color: #007bff;">{{ keyword }}</span>有关的文章</h4>
+    {% endif %}
+
+    {% if page_obj %}
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page.obj.previous_page_number }}">上一页</a>
+        {% endif %}
+        Page {{ page_obj.number }} of {{ paginator.num_pages }}.
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">下一页</a>
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
+
