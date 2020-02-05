@@ -2,6 +2,7 @@
 import mistune
 from django.contrib.auth.models import User
 from django.db import models
+from django.utils.functional import cached_property
 
 
 # Create your models here.
@@ -111,6 +112,14 @@ class Article(models.Model):
         """将queryset获取封装到Model层"""
         queryset = cls.objects.filter(status=cls.STATUS_NORMAL).order_by('-id')
         return queryset
+
+    @cached_property
+    def tags(self):
+        """
+        cached_property帮我们把返回的数据绑定到实例上面
+        配置sitemap
+        """
+        return ','.join(self.tag.values_list('name', flat=True))
 
     def save(self, *args, **kwargs):
         self.content_html = mistune.markdown(self.content)
