@@ -1,22 +1,44 @@
 {% extends 'appblog/base.html' %}
 {% load comment_block %}
+{% load static %}
 
 {% block title %}
     {{ article.title }}
 {% endblock %}
 
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'highlight/styles/default.css' %}">
+    <script src="{% static 'highlight/highlight.pack.js' %}"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+{% endblock %}
+
+
 {% block main %}
+    <div class="detail">
     {% if article %}
-        <h1>{{ article.title }}</h1>
-        <div>
-            <span>分类：{{ article.category.name }}</span>
-            <span>作者：{{ article.owner.username }}</span>
-        </div>
+        <h2 class="under_line"><span>{{ article.title }}</span></h2>
         <hr>
-        <p>{{ article.content }}</p>
+        <div class="info">
+            <span>作者：{{ article.owner.username }}</span> |
+            <span class="card-link">标签:
+                    {% for tag in article.tag.all %}
+                        <a href="{% url 'tag-list' tag.id %}">{{ tag.name }}</a>
+                    {% endfor %}
+            </span> |
+            <span>发布：{{ article.created_time }}</span> |
+            <span>阅读量：{{ article.pv }}</span>
+        </div>
+        <br>
+        <div id="article" class="content">
+            <p>{{ article.content_html|safe }}</p>
+        </div>
+
 
     {% endif %}
     {# request.path为comment_block的参数 #}
     {% comment_block request.path %}
+
+    </div>
 
 {% endblock %}

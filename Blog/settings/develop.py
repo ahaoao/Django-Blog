@@ -2,7 +2,7 @@
 # -*- coding:utf-8 -*-
 # Author: ahao
 # Time: 2020/1/15 20:44
-"""开发环境的配置  pycharm设置 DJANGO_SETTINGS_MODULE """
+"""开发环境的配置  pycharm设置 o """
 
 
 from .base import *  # NOQA
