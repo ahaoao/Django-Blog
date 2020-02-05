@@ -1,5 +1,5 @@
 """内容相关的Model"""
-
+import mistune
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -86,7 +86,7 @@ class Article(models.Model):
     title = models.CharField(max_length=255, verbose_name="标题")
     desc = models.CharField(max_length=1024, blank=True, verbose_name="摘要")
     content = models.TextField(verbose_name="正文", help_text="正文必须为 MarkDown 格式")
-    # content_html = models.TextField(verbose_name="正文HTML代码", blank=True, editable=False)
+    content_html = models.TextField(verbose_name="正文HTML代码", blank=True, editable=False)
     status = models.PositiveIntegerField(choices=STATUS_ITEMS, default=STATUS_NORMAL, verbose_name="状态")
     category = models.ForeignKey(Category, verbose_name="分类", on_delete=models.CASCADE)
     # 对于多对多的关系，在数据库中不会存在tag字段，会自动抽象出第三张关系表
@@ -112,31 +112,9 @@ class Article(models.Model):
         queryset = cls.objects.filter(status=cls.STATUS_NORMAL).order_by('-id')
         return queryset
 
-    # @staticmethod
-    # def get_by_tag(tag_id):
-    #     """从view中拆分出来处理tag_id的函数"""
-    #     try:
-    #         tag = Tag.get_all().get(id=tag_id)
-    #     except Tag.DoesNotExist:
-    #         tag = None
-    #         article_list = []
-    #     else:
-    #         # select_related解决N+1问题，
-    #         article_list = tag.article_set.filter(status=Article.STATUS_NORMAL).select_related('owner', 'category')
-    #     return article_list, tag
-    #
-    # @staticmethod
-    # def get_by_category(category_id):
-    #     """从view中拆分出来处理category_id的函数"""
-    #     try:
-    #         category = Category.get_all().get(id=category_id)
-    #     except Category.DoesNotExist:
-    #         category = None
-    #         article_list = []
-    #     else:
-    #         article_list = category.article_set.filter(status=Article.STATUS_NORMAL).select_related('owner', 'category')
-    #
-    #     return article_list, category
+    def save(self, *args, **kwargs):
+        self.content_html = mistune.markdown(self.content)
+        super().save(*args, **kwargs)
 
     class Meta:
         verbose_name_plural = "文章"

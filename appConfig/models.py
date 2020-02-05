@@ -87,17 +87,17 @@ class SideBar(models.Model):
             result = self.content
         elif self.display_type == self.DISPLAY_LATEST:  # 最新文章
             context = {
-                'articles': Article.latest_articles()
+                'articles': Article.latest_articles()[:10]
             }
             result = render_to_string('appconfig/blocks/sidebar_articles.html', context)
         elif self.display_type == self.DISPLAY_HOT:  # 最热文章
             context = {
-                'articles': Article.hot_article()
+                'articles': Article.hot_article()[:10]
             }
             result = render_to_string('appconfig/blocks/sidebar_articles.html', context)
         elif self.display_type == self.DISPLAY_COMMENT:  # 最近评论
             context = {
-                'comments': Comment.objects.filter(status=Comment.STATUS_NORMAL).order_by('-id')[:5]  # 降序排列取前五条数据
+                'comments': Comment.objects.filter(status=Comment.STATUS_NORMAL).order_by('-id')[:10]  # 降序排列取前10条数据
             }
             result = render_to_string('appconfig/blocks/sidebar_comments.html', context)
         return result
